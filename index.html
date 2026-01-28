@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title> Love Checker</title>
+  <title>Love Checker</title>
   
   <!-- Screenshot Library -->
   <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
   <style>
-    /* Premium Font Import */
+    /* Premium Font */
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
 
     /* --- GLOBAL RESET --- */
@@ -18,8 +18,8 @@
     body {
       margin: 0;
       padding: 0;
-      /* Sexy Dark/Red Gradient Background */
-      background: linear-gradient(135deg, #2b0c13 0%, #1a0508 100%);
+      /* SEXY DARK BACKGROUND */
+      background: radial-gradient(circle, #2b0510 0%, #000000 100%);
       font-family: 'Montserrat', sans-serif;
       min-height: 100vh;
       display: flex;
@@ -30,21 +30,41 @@
       color: white;
     }
 
-    /* Floating Particles Background */
-    .bg-particles span {
-      position: absolute;
-      width: 10px; height: 10px;
-      background: #ff0055;
-      border-radius: 50%;
-      box-shadow: 0 0 10px #ff0055, 0 0 20px #ff0055;
-      animation: move 10s linear infinite;
-      opacity: 0.3;
+    /* --- RED BALLOONS ANIMATION --- */
+    .balloon-container {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none;
       z-index: 0;
+      overflow: hidden;
     }
-    @keyframes move {
-      0% { transform: translateY(100vh) scale(0); opacity: 0; }
-      50% { opacity: 0.5; }
-      100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+    
+    .balloon {
+      position: absolute;
+      bottom: -100px;
+      background: radial-gradient(circle at 30% 30%, #ff5e7e, #ff0040);
+      border-radius: 50% 50% 50% 50%;
+      box-shadow: inset -5px -5px 10px rgba(0,0,0,0.3), 0 0 20px rgba(255, 0, 64, 0.4);
+      animation: floatUp linear infinite;
+      opacity: 0.8;
+    }
+    
+    /* Balloon String */
+    .balloon::after {
+      content: '';
+      position: absolute;
+      bottom: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1px;
+      height: 20px;
+      background: rgba(255, 255, 255, 0.4);
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+      10% { opacity: 0.9; }
+      100% { transform: translateY(-120vh) rotate(10deg); opacity: 0; }
     }
 
     /* --- WRAPPER --- */
@@ -52,51 +72,56 @@
       position: relative;
       z-index: 10;
       width: 90%;
-      max-width: 400px;
+      /* Increased Max Width for Bigger Box */
+      max-width: 450px; 
     }
 
-    /* --- INPUT FORM --- */
+    /* --- 1. INPUT FORM (BIGGER & SEXY) --- */
     .input-box {
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(15px);
-      -webkit-backdrop-filter: blur(15px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 40px 25px;
-      border-radius: 20px;
+      background: rgba(20, 0, 5, 0.6);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 0, 68, 0.3);
+      /* Increased Padding for Bigger Look */
+      padding: 50px 30px; 
+      border-radius: 25px;
       text-align: center;
-      box-shadow: 0 0 30px rgba(255, 0, 85, 0.2);
+      box-shadow: 0 0 50px rgba(255, 0, 64, 0.2);
     }
 
     .title-text {
-      font-size: 1.8rem;
+      font-size: 2.2rem;
       font-weight: 900;
       letter-spacing: 2px;
-      margin-bottom: 30px;
+      margin-bottom: 35px;
       text-transform: uppercase;
-      background: linear-gradient(to right, #ff0055, #ffcc00);
+      /* Gold/Red Gradient Text */
+      background: linear-gradient(to right, #ff0040, #ffcc00);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 20px rgba(255, 0, 85, 0.5);
+      text-shadow: 0 0 20px rgba(255, 0, 64, 0.6);
     }
 
     input {
       width: 100%;
-      padding: 18px;
-      margin-bottom: 20px;
+      padding: 20px; /* Bigger Inputs */
+      margin-bottom: 25px;
       border: none;
-      border-radius: 10px;
-      background: rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.1);
       border: 1px solid rgba(255, 255, 255, 0.1);
       color: #fff;
-      font-size: 16px;
+      font-size: 18px;
       text-align: center;
       font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
       outline: none;
       transition: 0.3s;
     }
     input:focus {
-      border-color: #ff0055;
-      box-shadow: 0 0 15px rgba(255, 0, 85, 0.4);
+      border-color: #ff0040;
+      box-shadow: 0 0 15px rgba(255, 0, 64, 0.5);
+      background: rgba(0, 0, 0, 0.6);
     }
 
     .btn-main {
@@ -104,136 +129,135 @@
       padding: 18px;
       border: none;
       border-radius: 50px;
-      background: linear-gradient(90deg, #ff0055, #ff4400);
+      background: linear-gradient(90deg, #ff0040, #ff8800);
       color: white;
-      font-weight: 800;
-      font-size: 16px;
+      font-weight: 900;
+      font-size: 18px;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
       cursor: pointer;
-      box-shadow: 0 0 20px rgba(255, 68, 0, 0.4);
+      box-shadow: 0 0 25px rgba(255, 68, 0, 0.5);
       transition: 0.3s;
     }
     .btn-main:active { transform: scale(0.95); }
 
-    /* --- RESULT CARD --- */
+    /* --- 2. RESULT CARD (PREMIUM) --- */
     .result-container {
       display: none;
-      text-align: center; /* Center align items outside card */
+      text-align: center;
     }
 
-    /* Iska image banega */
+    /* CARD DESIGN (To be Captured) */
     .card-capture {
       position: relative;
-      /* Deep Sexy Gradient for Card */
-      background: linear-gradient(180deg, #180509 0%, #4a0e1c 100%);
-      border-radius: 20px;
+      /* Sexy Dark Red Gradient */
+      background: linear-gradient(180deg, #1f0208 0%, #4d0014 100%);
+      border-radius: 25px;
       padding: 40px 20px;
       text-align: center;
-      border: 2px solid #ff0055;
-      box-shadow: 0 0 50px rgba(255, 0, 85, 0.3);
+      border: 2px solid #ff0040;
+      box-shadow: 0 0 60px rgba(255, 0, 64, 0.4);
       overflow: hidden;
     }
 
-    /* Background Pattern Overlay */
+    /* Grid Overlay Effect */
     .card-capture::before {
       content: '';
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
-      background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
       background-size: 20px 20px;
-      opacity: 0.2;
       pointer-events: none;
     }
 
-    /* Names */
     .names-display {
       font-size: 1.8rem;
-      font-weight: 700;
+      font-weight: 800;
       color: #fff;
       line-height: 1.2;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-      margin-top: 10px; /* Slight spacing since badge is gone */
+      margin-top: 10px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.8);
     }
     .names-display span {
       display: block;
       font-size: 1rem;
-      color: #ff0055;
-      margin: 5px 0;
-      font-weight: 400;
+      color: #ff0040;
+      margin: 8px 0;
+      font-weight: 500;
+      letter-spacing: 2px;
     }
 
-    /* The Heart */
     .heart-icon {
-      font-size: 60px;
+      font-size: 70px;
       margin: 15px 0;
-      filter: drop-shadow(0 0 10px #ff0055);
+      filter: drop-shadow(0 0 15px #ff0040);
       animation: beat 0.8s infinite alternate;
     }
-    @keyframes beat { to { transform: scale(1.1); } }
+    @keyframes beat { to { transform: scale(1.15); } }
 
-    /* The Score */
     .score-display {
       font-size: 5rem;
       font-weight: 900;
-      background: linear-gradient(to bottom, #fff, #ff99bb);
+      /* Metallic Text Effect */
+      background: linear-gradient(to bottom, #ffffff, #ff80a0);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       margin: 0;
       line-height: 1;
-      filter: drop-shadow(0 0 20px rgba(255, 0, 85, 0.8));
+      filter: drop-shadow(0 0 10px rgba(255, 0, 64, 0.5));
     }
 
-    /* Compatibility Bar */
     .bar-bg {
       width: 100%;
       height: 8px;
       background: rgba(255,255,255,0.1);
       border-radius: 10px;
-      margin: 20px 0 10px 0;
+      margin: 25px 0 10px 0;
       overflow: hidden;
     }
     .bar-fill {
       height: 100%;
-      background: #ff0055;
+      background: #ff0040;
       width: 0%;
-      box-shadow: 0 0 10px #ff0055;
+      box-shadow: 0 0 15px #ff0040;
       transition: width 1s ease;
     }
 
     .msg-display {
       font-size: 0.9rem;
       color: #ccc;
-      letter-spacing: 1px;
+      letter-spacing: 2px;
       text-transform: uppercase;
       margin-bottom: 5px;
     }
 
-    /* Developer Text Style */
+    /* Developer Text */
     .developer-text {
-      margin-top: 20px;
-      color: #ff0055;
+      margin-top: 25px;
+      color: #ff0040;
       font-weight: 800;
       font-size: 0.8rem;
       text-transform: uppercase;
       letter-spacing: 1.5px;
-      text-shadow: 0 0 10px rgba(255, 0, 85, 0.5);
+      text-shadow: 0 0 15px rgba(255, 0, 64, 0.4);
     }
 
-    /* --- Action Area --- */
-    .action-area {
+    /* --- BUTTON GROUP --- */
+    .btn-group {
       margin-top: 20px;
       display: flex;
-      flex-direction: column;
-      gap: 15px;
+      gap: 12px;
+      justify-content: center;
     }
 
     .share-btn {
+      flex: 3;
       background: #25D366;
       color: #fff;
-      text-decoration: none;
       padding: 16px;
-      border-radius: 50px;
+      border-radius: 15px;
       font-weight: 700;
       font-size: 16px;
       display: flex;
@@ -243,29 +267,45 @@
       cursor: pointer;
       border: none;
       box-shadow: 0 0 20px rgba(37, 211, 102, 0.4);
+      text-decoration: none;
       transition: 0.3s;
     }
-    .share-btn:hover { transform: translateY(-2px); box-shadow: 0 0 30px rgba(37, 211, 102, 0.6); }
-
-    .reset-btn {
-      background: transparent;
-      border: 1px solid rgba(255,255,255,0.2);
-      color: #aaa;
-      padding: 12px;
-      border-radius: 50px;
+    
+    .download-btn {
+      flex: 1;
+      background: #ff9100;
+      color: white;
+      border: none;
+      border-radius: 15px;
       cursor: pointer;
-      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 0 20px rgba(255, 145, 0, 0.4);
+      transition: 0.3s;
+    }
+    
+    .share-btn:hover, .download-btn:hover { transform: translateY(-3px); }
+
+    .reset-link {
+      display: block;
+      margin-top: 20px;
+      color: #666;
+      text-decoration: underline;
+      cursor: pointer;
+      font-size: 0.9rem;
     }
 
     /* Loader */
     .loader {
       display: none;
-      width: 40px; height: 40px;
-      border: 4px solid rgba(255, 0, 85, 0.3);
-      border-top: 4px solid #ff0055;
+      width: 45px; height: 45px;
+      border: 4px solid rgba(255, 0, 64, 0.2);
+      border-top: 4px solid #ff0040;
       border-radius: 50%;
       animation: spin 1s linear infinite;
-      margin: 10px auto;
+      margin: 15px auto;
     }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
@@ -273,28 +313,27 @@
 </head>
 <body>
 
-  <!-- Animated Background -->
-  <div class="bg-particles" id="particles"></div>
+  <!-- RED BALLOONS BACKGROUND -->
+  <div class="balloon-container" id="balloons"></div>
 
   <div class="wrapper">
     
-    <!-- 1. INPUT FORM -->
+    <!-- 1. INPUT FORM (BIG & SEXY) -->
     <div class="input-box" id="inputSection">
-      <div class="title-text">Name Love Checker</div>
+      <div class="title-text">Love Checker</div>
       
-      <input type="text" id="yourName" placeholder="Your Name" autocomplete="off">
-      <input type="text" id="partnerName" placeholder="Partner's Name" autocomplete="off">
+      <input type="text" id="yourName" placeholder="YOUR NAME" autocomplete="off">
+      <input type="text" id="partnerName" placeholder="PARTNER'S NAME" autocomplete="off">
       
       <button class="btn-main" onclick="calculateLove()">Check Compatibility</button>
       <div class="loader" id="loadingSpinner"></div>
     </div>
 
-    <!-- 2. RESULT CARD -->
+    <!-- 2. RESULT SECTION -->
     <div class="result-container" id="resultSection">
       
-      <!-- CARD START (Iska screenshot banega) -->
+      <!-- CARD START (Image Capture Area) -->
       <div class="card-capture" id="captureTarget">
-        <!-- Verified Match REMOVED -->
         
         <div class="names-display" id="displayName">
           VIKAS <span>LOVES</span> PRIYA
@@ -310,38 +349,63 @@
 
         <div class="msg-display" id="displayMsg">CALCULATING...</div>
         
-        <!-- Footer link REMOVED from here -->
       </div>
       <!-- CARD END -->
 
-      <!-- DEVELOPER NAME ADDED BELOW CARD -->
       <div class="developer-text">@KKG CHEATS</div>
 
-      <div class="action-area">
-        <button class="share-btn" onclick="shareCard()">
+      <!-- Action Buttons -->
+      <div class="btn-group">
+        
+        <!-- Share Button -->
+        <button class="share-btn" id="shareBtn" onclick="shareOnWhatsApp()">
           <svg width="24" height="24" fill="white" viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.66C16.6 3.66 20.3 7.36 20.3 11.91C20.3 16.46 16.6 20.16 12.05 20.16C10.58 20.16 9.11 19.76 7.85 19L7.55 18.82L4.43 19.64L5.26 16.53L5.07 16.21C4.2 14.92 3.79 13.42 3.8 11.91C3.81 7.36 7.51 3.66 12.05 3.66Z"/></svg>
           Share on WhatsApp
         </button>
-        <button class="reset-btn" onclick="resetApp()">Check Another Name</button>
+
+        <!-- Download Button -->
+        <button class="download-btn" onclick="downloadCard()">
+          ⬇️
+        </button>
+
       </div>
+
+      <div class="reset-link" onclick="resetApp()">Check Another Name</div>
 
     </div>
   </div>
 
   <script>
-    // ========== LINK CONFIGURATION ==========
+    // ========== LINK CONFIG ==========
     const websiteLink = window.location.href; 
-    // ========================================
+    // =================================
 
-    // Particles Generator
-    const particleContainer = document.getElementById('particles');
-    for(let i=0; i<20; i++){
-      let span = document.createElement('span');
-      span.style.left = Math.random() * 100 + 'vw';
-      span.style.animationDuration = (Math.random() * 5 + 5) + 's';
-      span.style.animationDelay = Math.random() * 5 + 's';
-      particleContainer.appendChild(span);
+    // --- Red Balloons Generator ---
+    const balloonContainer = document.getElementById('balloons');
+    
+    function createBalloon() {
+      const b = document.createElement('div');
+      b.classList.add('balloon');
+      
+      // Random positioning
+      b.style.left = Math.random() * 100 + 'vw';
+      
+      // Random size
+      let size = Math.random() * 40 + 20; // 20px to 60px
+      b.style.width = size + 'px';
+      b.style.height = (size * 1.2) + 'px'; // Slightly oval
+      
+      // Random speed
+      b.style.animationDuration = (Math.random() * 5 + 5) + 's';
+      
+      balloonContainer.appendChild(b);
+      
+      // Remove to save memory
+      setTimeout(() => { b.remove(); }, 10000);
     }
+
+    // Create more balloons for denser effect
+    setInterval(createBalloon, 300);
 
     const messages = [
       "SOULMATES 💍", 
@@ -357,16 +421,14 @@
       const name2 = document.getElementById('partnerName').value.trim();
 
       if (!name1 || !name2) {
-        alert("Naam to daal bhai pehle!");
+        alert("Naam to likho mere bhai! ❤️");
         return;
       }
 
-      // UI Changes
       document.querySelector('.btn-main').style.display = 'none';
       document.getElementById('loadingSpinner').style.display = 'block';
 
       setTimeout(() => {
-        // Calculation
         const key = [name1.toLowerCase(), name2.toLowerCase()].sort().join('_');
         let hash = 0;
         for (let i = 0; i < key.length; i++) {
@@ -374,7 +436,6 @@
         }
         const percentage = 50 + Math.abs(hash % 51);
 
-        // Get Message
         let msgIndex = 5;
         if(percentage > 90) msgIndex = 0;
         else if(percentage > 75) msgIndex = 1;
@@ -382,20 +443,17 @@
         else if(percentage > 45) msgIndex = 3;
         else if(percentage > 30) msgIndex = 4;
 
-        // Show Result
         document.getElementById('inputSection').style.display = 'none';
         document.getElementById('resultSection').style.display = 'block';
 
         document.getElementById('displayName').innerHTML = `${name1.toUpperCase()} <span>LOVES</span> ${name2.toUpperCase()}`;
         document.getElementById('displayMsg').innerText = messages[msgIndex];
 
-        // Animate Numbers & Bar
         let count = 0;
         const interval = setInterval(() => {
           count++;
           document.getElementById('displayScore').innerText = count + "%";
           document.getElementById('fillBar').style.width = count + "%";
-          
           if(count >= percentage) clearInterval(interval);
         }, 20);
 
@@ -406,51 +464,60 @@
       window.location.reload();
     }
 
-    // --- SHARE FUNCTION ---
-    async function shareCard() {
+    // --- DOWNLOAD ---
+    async function downloadCard() {
       const target = document.getElementById('captureTarget');
-      const shareBtn = document.querySelector('.share-btn');
+      const btn = document.querySelector('.download-btn');
+      
+      btn.innerHTML = "⏳";
+      try {
+        const canvas = await html2canvas(target, { scale: 2, backgroundColor: null });
+        const link = document.createElement('a');
+        link.download = 'Love_Check_Result.png';
+        link.href = canvas.toDataURL();
+        link.click();
+        btn.innerHTML = "✅";
+        setTimeout(() => btn.innerHTML = "⬇️", 2000);
+      } catch (err) {
+        btn.innerHTML = "❌";
+      }
+    }
+
+    // --- SHARE WHATSAPP ---
+    async function shareOnWhatsApp() {
+      const target = document.getElementById('captureTarget');
+      const shareBtn = document.getElementById('shareBtn');
       const originalText = shareBtn.innerHTML;
       
-      shareBtn.innerHTML = "Creating Image... 📸";
+      shareBtn.innerHTML = "Creating... 📸";
 
       try {
-        const canvas = await html2canvas(target, { 
-          scale: 2, // High Quality
-          backgroundColor: null, 
-          useCORS: true 
-        });
+        const canvas = await html2canvas(target, { scale: 2, backgroundColor: null, useCORS: true });
 
         canvas.toBlob(async (blob) => {
           const file = new File([blob], "love_match.png", { type: "image/png" });
           
-          const shareData = {
-            title: 'Name Love Checker',
-            text: `🔥 Check Your Love Percentage!\nCalculate here:`,
-            url: websiteLink,
-            files: [file]
-          };
-
           if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
              try {
-               await navigator.share(shareData);
+               await navigator.share({
+                 files: [file],
+                 title: 'Love Checker',
+                 text: `🔥 Check Love Percentage! ❤️\nResult: ${websiteLink}`
+               });
                shareBtn.innerHTML = "Shared! ✅";
              } catch (err) {
                shareBtn.innerHTML = originalText;
              }
           } else {
-            // Fallback
-            const link = document.createElement('a');
-            link.download = 'love_match.png';
-            link.href = canvas.toDataURL();
-            link.click();
-            alert("Image Downloaded!");
+            alert("Image sharing not supported in this browser. Opening WhatsApp...");
+            const text = `🔥 Check Love Percentage! ❤️\nResult: ${websiteLink}`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
             shareBtn.innerHTML = originalText;
           }
         }, 'image/png');
 
       } catch (err) {
-        alert("Error sharing image.");
+        alert("Error sharing.");
         shareBtn.innerHTML = originalText;
       }
     }
