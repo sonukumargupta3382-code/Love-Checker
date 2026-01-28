@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Love Checker</title>
+  
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600;800&display=swap');
+
+    /* --- Base Setup --- */
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
+      color: #333;
+    }
+
+    .bg-hearts {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 0;
+    }
+    .heart-shape {
+      position: absolute;
+      bottom: -50px;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 20px;
+      animation: floatUp linear infinite;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+    }
+
+    /* --- Wrapper Controls Width --- */
+    /* Update: Size wapas normal kar diya taaki Input aur Result same dikhein */
+    .wrapper {
+      position: relative;
+      z-index: 10;
+      width: 90%;
+      max-width: 400px; /* Standard mobile width */
+    }
+
+    /* --- 1. Input Form --- */
+    .input-box {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      border: 2px solid #ffd2e0;
+      padding: 40px 30px;
+      border-radius: 24px;
+      box-shadow: 0 15px 35px rgba(255, 118, 142, 0.2);
+      text-align: center;
+      transition: all 0.5s ease;
+    }
+
+    .input-box h1 {
+      margin: 0 0 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      background: -webkit-linear-gradient(#ff2f70, #ff8f70);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: 1.8rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 16px;
+      margin-bottom: 20px;
+      border: 2px solid #ffd2e0;
+      border-radius: 12px;
+      background: #fff0f6;
+      font-size: 16px;
+      text-align: center;
+      outline: none;
+      font-weight: 600;
+      color: #b43565;
+      transition: 0.3s;
+    }
+    input:focus {
+      border-color: #ff2f70;
+      background: #fff;
+      box-shadow: 0 0 10px rgba(255, 47, 112, 0.2);
+    }
+
+    .btn-main {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(90deg, #ff4a8d, #ff006a);
+      color: white;
+      font-weight: 700;
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(255, 0, 106, 0.3);
+      transition: 0.3s;
+    }
+    .btn-main:active { transform: scale(0.98); }
+
+    /* --- 2. Result Card (SIZE FIXED) --- */
+    .result-container {
+      display: none;
+      perspective: 1000px;
+    }
+
+    .card-to-capture {
+      background: white;
+      border-radius: 24px;
+      /* Padding Input Box jaisa same rakha hai */
+      padding: 40px 20px; 
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(255, 136, 174, 0.3);
+      border: 4px solid #fff0f6;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-header {
+      background: #ffe6f0;
+      color: #ff2f70;
+      padding: 5px 15px;
+      border-radius: 20px;
+      display: inline-block;
+      font-size: 12px;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .names-display {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #444;
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+    .names-display span { color: #ff2f70; }
+
+    /* Heart Animation */
+    .heart-anim {
+      font-size: 50px; /* Balanced size */
+      margin: 10px 0;
+      animation: beat 1s infinite alternate;
+      display: inline-block;
+      color: #ff006a;
+    }
+    @keyframes beat { to { transform: scale(1.2); } }
+
+    .score-big {
+      font-size: 3.5rem; /* Fits perfectly inside card */
+      font-weight: 800;
+      background: -webkit-linear-gradient(#ff4a8d, #ff006a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0;
+    }
+
+    .msg-small {
+      font-size: 1rem;
+      color: #888;
+      font-style: italic;
+      margin-bottom: 15px;
+    }
+
+    .card-footer {
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px dashed #ffd2e0;
+      font-size: 11px;
+      color: #b43565;
+    }
+
+    /* --- Action Buttons --- */
+    .action-area {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .share-btn {
+      background: #25D366;
+      color: white;
+      text-decoration: none;
+      padding: 15px;
+      border-radius: 50px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+      border: none;
+      font-size: 16px;
+      width: 100%;
+    }
+
+    .retry-link {
+      color: #ff2f70;
+      margin-top: 10px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      text-decoration: underline;
+      text-align: center;
+    }
+
+    /* Loader */
+    .loader {
+      display: none;
+      border: 4px solid rgba(255, 47, 112, 0.2);
+      border-top: 4px solid #ff2f70;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 10px auto;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+  </style>
+</head>
+<body>
+
+  <!-- Pink Floating Hearts -->
+  <div class="bg-hearts" id="bgHearts"></div>
+
+  <div class="wrapper">
+    
+    <!-- SECTION 1: Input -->
+    <div class="input-box" id="inputSection">
+      <h1>Love Chacker</h1>
+      <p style="color:#888; margin-bottom: 25px;">Check your compatibility score ❤️</p>
+      
+      <input type="text" id="yourName" placeholder="Your Name" autocomplete="off">
+      <input type="text" id="partnerName" placeholder="Partner's Name" autocomplete="off">
+      
+      <button class="btn-main" onclick="calculateLove()">Check Love</button>
+      <div class="loader" id="loadingSpinner"></div>
+    </div>
+
+    <!-- SECTION 2: Result -->
+    <div class="result-container" id="resultSection">
+      
+      <!-- THIS DIV WILL BECOME THE IMAGE -->
+      <div class="card-to-capture" id="captureTarget">
+        <div class="card-header">Official Love Report</div>
+        
+        <div class="heart-anim">❤️</div>
+        
+        <div class="names-display" id="displayName">
+          Romeo <span>&</span> Juliet
+        </div>
+        
+        <div class="score-big" id="displayScore">0%</div>
+        <div class="msg-small" id="displayMsg">Calculation complete</div>
+
+        <div class="card-footer">
+          Developer by: <strong>KKG CHEATS</strong>
+        </div>
+      </div>
+      
+      <!-- Buttons outside -->
+      <div class="action-area">
+        <button class="share-btn" onclick="shareCard()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
+          Share Result on WhatsApp
+        </button>
+        
+        <div class="retry-link" onclick="resetApp()">Check Another Couple</div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // ========== YAHAN APNA LINK DALEIN ==========
+    const websiteLink = window.location.href; 
+    // ============================================
+
+    const messages = [
+      "Match made in Heaven! 💍", 
+      "True Love Forever! 😍", 
+      "Strong Connection! 🔥", 
+      "Looking Good! 😊", 
+      "Needs some effort... 🤔", 
+      "Just Friends! 🤝"
+    ];
+
+    function createHearts() {
+      const container = document.getElementById('bgHearts');
+      const heart = document.createElement('div');
+      heart.classList.add('heart-shape');
+      heart.innerHTML = Math.random() > 0.5 ? '❤️' : '💖'; 
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.animationDuration = Math.random() * 3 + 4 + 's'; 
+      heart.style.fontSize = Math.random() * 20 + 10 + 'px';
+      container.appendChild(heart);
+      setTimeout(() => { heart.remove(); }, 6000);
+    }
+    setInterval(createHearts, 500);
+
+    function calculateLove() {
+      const name1 = document.getElementById('yourName').value.trim();
+      const name2 = document.getElementById('partnerName').value.trim();
+
+      if (!name1 || !name2) {
+        alert("Please enter both names!");
+        return;
+      }
+
+      document.querySelector('.btn-main').style.display = 'none';
+      document.getElementById('loadingSpinner').style.display = 'block';
+
+      setTimeout(() => {
+        const key = [name1.toLowerCase(), name2.toLowerCase()].sort().join('_');
+        let hash = 0;
+        for (let i = 0; i < key.length; i++) {
+          hash = key.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        const percentage = 50 + Math.abs(hash % 51);
+
+        let msgIndex = 5;
+        if(percentage > 90) msgIndex = 0;
+        else if(percentage > 75) msgIndex = 1;
+        else if(percentage > 60) msgIndex = 2;
+        else if(percentage > 45) msgIndex = 3;
+        else if(percentage > 30) msgIndex = 4;
+
+        document.getElementById('displayName').innerHTML = `${capitalize(name1)} <span>&</span> ${capitalize(name2)}`;
+        document.getElementById('displayScore').innerText = percentage + "%";
+        document.getElementById('displayMsg').innerText = messages[msgIndex];
+        
+        document.getElementById('inputSection').style.display = 'none';
+        document.getElementById('resultSection').style.display = 'block';
+        
+      }, 1500);
+    }
+
+    function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+    function resetApp() {
+      window.location.reload();
+    }
+
+    async function shareCard() {
+      const target = document.getElementById('captureTarget');
+      const shareBtn = document.querySelector('.share-btn');
+      
+      const originalText = shareBtn.innerHTML;
+      shareBtn.innerHTML = "Generating Image... 📸";
+
+      try {
+        const canvas = await html2canvas(target, { 
+          scale: 2, 
+          backgroundColor: null,
+          useCORS: true 
+        });
+
+        canvas.toBlob(async (blob) => {
+          const file = new File([blob], "love_result.png", { type: "image/png" });
+          
+          const shareData = {
+            title: 'Love Checker Result',
+            text: `Check your love percentage! ❤️ \nCalculate yours here:`,
+            url: websiteLink,
+            files: [file]
+          };
+
+          if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+             try {
+               await navigator.share(shareData);
+               shareBtn.innerHTML = "Shared Successfully! ✅";
+             } catch (err) {
+               console.log("Share cancelled", err);
+               shareBtn.innerHTML = originalText;
+             }
+          } else {
+            const link = document.createElement('a');
+            link.download = 'love-checker-result.png';
+            link.href = canvas.toDataURL();
+            link.click();
+            alert("Image downloaded! You can now send it on WhatsApp manually.");
+            shareBtn.innerHTML = originalText;
+          }
+        }, 'image/png');
+
+      } catch (err) {
+        console.error("Error generating image:", err);
+        alert("Could not generate image. Please try again.");
+        shareBtn.innerHTML = originalText;
+      }
+    }
+  </script>
+</body>
+</html>
